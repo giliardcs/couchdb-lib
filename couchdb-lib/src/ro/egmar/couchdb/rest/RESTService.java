@@ -18,6 +18,8 @@ import javax.xml.ws.Dispatch;
 import javax.xml.ws.Service;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.http.HTTPException;
+import ro.egmar.couchdb.common.ErrorCode;
 
 /**
  *
@@ -50,17 +52,28 @@ public class RESTService {
     }
     
     /** Execute PUT request */
-    public static Source putAction(String url, String data) {
+    public static Object putAction(String url, String data) {
         Service service = Service.create(qname);
 	service.addPort(qname, HTTPBinding.HTTP_BINDING, url);
         Dispatch<Source> dispatcher = service.createDispatch(qname, Source.class, Service.Mode.MESSAGE);
         Map<String, Object> requestContext = dispatcher.getRequestContext();
         requestContext.put(MessageContext.HTTP_REQUEST_METHOD, "PUT");
-        Source result;
-        if (null == data || data.equalsIgnoreCase (""))
-            result = dispatcher.invoke(new StreamSource(new StringReader("<node></node>")));
-        else
-            result = dispatcher.invoke(new StreamSource(new StringReader(data)));
+        Source result = null;
+        try {
+            if (null == data || data.equalsIgnoreCase (""))
+                result = dispatcher.invoke(new StreamSource(new StringReader("<node></node>")));
+            else
+                result = dispatcher.invoke(new StreamSource(new StringReader(data)));
+        } catch (HTTPException e) {
+            switch(e.getStatusCode ()) {
+                case 409: 
+                    return ErrorCode.DB_ALREADY_EXISTS;
+                case 404:
+                    return ErrorCode.DB_NOT_FOUND;
+                default:
+                    break;
+            }
+        }
         return result;
     }
     
