@@ -66,4 +66,9 @@ public class Session {
         
         return null;
     }
+    
+    /** Return database instance by given name */
+    public Database getDatabaseByName(String name) {
+        return null;
+    }
 }
