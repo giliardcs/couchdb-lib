@@ -53,7 +53,11 @@ public class Session {
         this.isSecure = isSecure;
     }
     
-    /** Creates a new database */
+    /** 
+     * Creates a new database with the given name 
+     *
+     * @param name must contain lowercase characters (a-z), digits (0-9), or any of these characters `_$()+-/` and must end with a slash.  
+     */
     public void createDatabase(String name) {
         String url = "http://"+this.hostname+":"+this.port+"/"+name.toLowerCase(Locale.ENGLISH)+"/";
         RESTService.getInstance().putAction(url,"");
@@ -67,7 +71,15 @@ public class Session {
         return null;
     }
     
-    /** Return database instance by given name */
+    /** 
+     * Returns an Database object. Name argument must contain
+     * lowercase characters (a-z), digits (0-9), or any of 
+     * these characters `_$()+-/` and must end with a slash.
+     *
+     * @param   name    an datbase name
+     * @return          the database with specified name
+     * @see             ro.egmar.couchdb.Database
+     */
     public Database getDatabaseByName(String name) {
         return null;
     }
