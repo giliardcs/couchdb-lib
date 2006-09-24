@@ -47,7 +47,7 @@ public class Session {
         this.initSession (hostname, port, isSecure);
     }
     
-    private void initSession(String hostname, String port, Boolean isSecure) {
+    public void initSession(String hostname, String port, Boolean isSecure) {
         this.hostname = hostname;
         this.port = port;
         this.isSecure = isSecure;
@@ -64,16 +64,6 @@ public class Session {
         String url = "http://"+this.hostname+":"+this.port+"/$all_dbs";
         Source result = RESTService.getInstance().getAction(url);
         
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        StringWriter transformationResult = new StringWriter();
-        try {
-            Transformer t = tFactory.newTransformer();
-            t.transform(result, new StreamResult(transformationResult));
-        } catch (TransformerConfigurationException ex) {
-            ex.printStackTrace();
-        } catch (TransformerException ex) {
-            ex.printStackTrace();
-        }
         return null;
     }
 }
