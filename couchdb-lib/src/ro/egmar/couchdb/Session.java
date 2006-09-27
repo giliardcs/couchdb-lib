@@ -27,6 +27,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
 import ro.egmar.couchdb.rest.RESTService;
 
@@ -63,10 +64,20 @@ public class Session {
         RESTService.getInstance().putAction(url,"");
     }
     
-    /** Returns list of databases name */
+    /** 
+     * Return a list with names of databases available 
+     * on CouchDb server. Usually, used for in front ends.
+     *
+     * @return  List<String>    a list with names of available databases
+     * @see                     List
+     */
     public List<String> getAllDatabases() {
         String url = "http://"+this.hostname+":"+this.port+"/$all_dbs";
         Source result = RESTService.getInstance().getAction(url);
+        
+        DOMResult domResult = new DOMResult();
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.transform(result, domResult);
         
         return null;
     }
@@ -76,7 +87,7 @@ public class Session {
      * lowercase characters (a-z), digits (0-9), or any of 
      * these characters `_$()+-/` and must end with a slash.
      *
-     * @param   name    an datbase name
+     * @param   name    an database name
      * @return          the database with specified name
      * @see             ro.egmar.couchdb.Database
      */
