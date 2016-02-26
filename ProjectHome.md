@@ -1,0 +1,1 @@
+CouchDB-lib is an open-source Java API for working with CouchDB (http://www.couchdb.com).
